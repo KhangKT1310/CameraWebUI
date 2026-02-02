@@ -24,6 +24,11 @@ python -m http.server 8080
 
 Then visit `http://localhost:8080`.
 
+![alt text](img/image.png)
+![alt text](img/image_1.png)
+![alt text](img/image_2.png)
+![alt text](img/image_3.png)
+
 ## Mock vs Real API
 In `js/app.js`:
 - `USE_MOCK = true`: use mock data.
