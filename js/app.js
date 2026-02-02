@@ -1,7 +1,12 @@
 const page = document.getElementById("page");
 const toast = document.getElementById("toast");
+const authScreen = document.getElementById("auth-screen");
+const appShell = document.querySelector(".app");
 
 const USE_MOCK = true;
+
+const AUTH_KEY = "camera-auth";
+const CAMERA_KEY = "camera-list";
 
 const ENDPOINTS = {
   reboot: "/cgi-bin/system.cgi?action=reboot",
@@ -14,7 +19,9 @@ const ENDPOINTS = {
   factoryReset: "/cgi-bin/system.cgi?action=reset",
   ir: "/cgi-bin/ir.cgi?action=toggle",
   record: "/cgi-bin/record.cgi?action=start",
-  snapshot: "/cgi-bin/snapshot.cgi"
+  snapshot: "/cgi-bin/snapshot.cgi",
+  login: "/cgi-bin/login.cgi",
+  logout: "/cgi-bin/logout.cgi"
 };
 
 const MOCK = {
@@ -66,7 +73,33 @@ const MOCK = {
     mic_gain: "75",
     noise_reduction: "Medium",
     audio_channel: "Mono"
-  }
+  },
+  cameras: [
+    {
+      name: "Camera 01 – Entrance",
+      channel: "0",
+      snapshot: "/cgi-bin/snapshot.cgi?ch=0",
+      meta: "1920x1080 @ 30fps"
+    },
+    {
+      name: "Camera 02 – Parking",
+      channel: "1",
+      snapshot: "/cgi-bin/snapshot.cgi?ch=1",
+      meta: "1920x1080 @ 25fps"
+    },
+    {
+      name: "Camera 03 – Lobby",
+      channel: "2",
+      snapshot: "/cgi-bin/snapshot.cgi?ch=2",
+      meta: "1280x720 @ 30fps"
+    },
+    {
+      name: "Camera 04 – Warehouse",
+      channel: "3",
+      snapshot: "/cgi-bin/snapshot.cgi?ch=3",
+      meta: "1920x1080 @ 20fps"
+    }
+  ]
 };
 
 function showToast(message) {
@@ -114,6 +147,8 @@ function loadPage(name) {
 function initPage(name) {
   if (name === "dashboard") {
     loadDashboardStatus();
+    bindForm("camera-form", addCamera);
+    renderCameras();
   }
   if (name === "video") {
     bindForm("video-form", saveVideo);
@@ -245,10 +280,93 @@ function saveTime(formData) {
   apiPost(ENDPOINTS.time, payload).then(() => showToast("Time settings applied"));
 }
 
+function getCameras() {
+  const stored = localStorage.getItem(CAMERA_KEY);
+  if (stored) {
+    try {
+      return JSON.parse(stored);
+    } catch (err) {
+      return [...MOCK.cameras];
+    }
+  }
+  return [...MOCK.cameras];
+}
+
+function saveCameras(cameras) {
+  localStorage.setItem(CAMERA_KEY, JSON.stringify(cameras));
+}
+
+function renderCameras() {
+  const grid = document.getElementById("camera-grid");
+  if (!grid) return;
+  const cameras = getCameras();
+  grid.innerHTML = "";
+
+  cameras.forEach(camera => {
+    const card = document.createElement("div");
+    card.className = "card cam";
+    card.dataset.ch = camera.channel || "";
+
+    const thumb = document.createElement("div");
+    thumb.className = "cam-thumb";
+
+    const img = document.createElement("img");
+    img.alt = camera.name;
+    img.dataset.src = camera.snapshot;
+    img.src = cacheBust(camera.snapshot);
+
+    const badge = document.createElement("span");
+    badge.className = "badge live";
+    badge.textContent = "LIVE";
+
+    thumb.appendChild(img);
+    thumb.appendChild(badge);
+
+    const title = document.createElement("div");
+    title.className = "cam-title";
+    title.textContent = camera.name;
+
+    const meta = document.createElement("div");
+    meta.className = "cam-meta";
+    meta.textContent = camera.meta || "Stream";
+
+    card.appendChild(thumb);
+    card.appendChild(title);
+    card.appendChild(meta);
+    grid.appendChild(card);
+  });
+}
+
+function cacheBust(url) {
+  if (!url) return "";
+  const joiner = url.includes("?") ? "&" : "?";
+  return `${url}${joiner}_=${Date.now()}`;
+}
+
+function addCamera(formData, form) {
+  const payload = Object.fromEntries(formData.entries());
+  if (!payload.name || !payload.snapshot) {
+    showToast("Name and snapshot URL are required");
+    return;
+  }
+  const cameras = getCameras();
+  cameras.push(payload);
+  saveCameras(cameras);
+  renderCameras();
+  if (form) form.reset();
+  showToast("Camera added");
+}
+
+function resetCameras() {
+  saveCameras([...MOCK.cameras]);
+  renderCameras();
+  showToast("Camera list reset");
+}
+
 function refreshThumbs() {
   document.querySelectorAll(".cam-thumb img").forEach(img => {
-    const base = img.src.split("?")[0];
-    img.src = `${base}?_=${Date.now()}`;
+    const base = img.dataset.src || img.src;
+    img.src = cacheBust(base);
   });
   showToast("Thumbnails refreshed");
 }
@@ -295,4 +413,55 @@ function factoryReset() {
   }
 }
 
-loadPage("dashboard");
+function setAuthState(isAuthed) {
+  if (!authScreen || !appShell) return;
+  authScreen.classList.toggle("hidden", isAuthed);
+  appShell.classList.toggle("is-locked", !isAuthed);
+}
+
+function login(formData) {
+  const payload = Object.fromEntries(formData.entries());
+  if (USE_MOCK) {
+    if (payload.username === "admin" && payload.password === "admin") {
+      localStorage.setItem(AUTH_KEY, "mock-token");
+      setAuthState(true);
+      loadPage("dashboard");
+      showToast("Login successful");
+    } else {
+      showToast("Invalid credentials");
+    }
+    return;
+  }
+  apiPost(ENDPOINTS.login, payload).then(() => {
+    localStorage.setItem(AUTH_KEY, "token");
+    setAuthState(true);
+    loadPage("dashboard");
+    showToast("Login successful");
+  });
+}
+
+function logout() {
+  localStorage.removeItem(AUTH_KEY);
+  setAuthState(false);
+  if (!USE_MOCK) {
+    fetch(ENDPOINTS.logout, { method: "POST" });
+  }
+}
+
+function initAuth() {
+  const form = document.getElementById("login-form");
+  if (form) {
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      login(new FormData(form));
+    });
+  }
+
+  const authed = Boolean(localStorage.getItem(AUTH_KEY));
+  setAuthState(authed);
+  if (authed) {
+    loadPage("dashboard");
+  }
+}
+
+initAuth();

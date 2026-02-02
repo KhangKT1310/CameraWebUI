@@ -14,7 +14,7 @@
     <div class="brand">
       <div class="logo">
         <span class="dot"></span>
-        <span>Camera</span>
+        <span>Vogten Camera</span>
       </div>
     </div>
 
@@ -43,6 +43,7 @@
       </div>
       <div class="right">
         <button class="btn secondary" onclick="refreshThumbs()">Refresh Thumbnails</button>
+        <button class="btn secondary" onclick="logout()">Logout</button>
         <button class="btn danger" onclick="reboot()">Reboot</button>
       </div>
     </header>
@@ -53,6 +54,25 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<div class="auth-screen" id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <span class="dot"></span>
+      <span>Vogten Camera Console</span>
+    </div>
+    <h2>Sign in</h2>
+    <p class="subtitle">Use your administrator credentials</p>
+    <form id="login-form">
+      <label>Username</label>
+      <input name="username" placeholder="admin" />
+      <label>Password</label>
+      <input name="password" type="password" placeholder="••••••••" />
+      <button class="btn" type="submit">Login</button>
+    </form>
+    <div class="auth-hint">Default: admin / admin (mock)</div>
+  </div>
+</div>
 
 <script src="js/app.js"></script>
 </body>

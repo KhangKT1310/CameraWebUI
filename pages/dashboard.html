@@ -27,52 +27,37 @@
 <br>
 
 <div class="section-title">Live Thumbnails</div>
-<div class="grid cols-4" id="camera-grid">
-  <div class="card cam" data-ch="0">
-    <div class="cam-thumb">
-      <img src="/cgi-bin/snapshot.cgi?ch=0" alt="Camera 01" />
-      <span class="badge live">LIVE</span>
-    </div>
-    <div class="cam-title">Camera 01 – Entrance</div>
-    <div class="cam-meta">Stream: 1920x1080 @ 30fps</div>
-  </div>
-  <div class="card cam" data-ch="1">
-    <div class="cam-thumb">
-      <img src="/cgi-bin/snapshot.cgi?ch=1" alt="Camera 02" />
-      <span class="badge live">LIVE</span>
-    </div>
-    <div class="cam-title">Camera 02 – Parking</div>
-    <div class="cam-meta">Stream: 1920x1080 @ 25fps</div>
-  </div>
-  <div class="card cam" data-ch="2">
-    <div class="cam-thumb">
-      <img src="/cgi-bin/snapshot.cgi?ch=2" alt="Camera 03" />
-      <span class="badge live">LIVE</span>
-    </div>
-    <div class="cam-title">Camera 03 – Lobby</div>
-    <div class="cam-meta">Stream: 1280x720 @ 30fps</div>
-  </div>
-  <div class="card cam" data-ch="3">
-    <div class="cam-thumb">
-      <img src="/cgi-bin/snapshot.cgi?ch=3" alt="Camera 04" />
-      <span class="badge live">LIVE</span>
-    </div>
-    <div class="cam-title">Camera 04 – Warehouse</div>
-    <div class="cam-meta">Stream: 1920x1080 @ 20fps</div>
-  </div>
-</div>
+<div class="grid cols-4" id="camera-grid"></div>
 
 <br>
 
 <div class="grid cols-2">
   <div class="card">
-    <div class="section-title">Camera Status</div>
-    <div class="list" id="camera-status-list">
-      <div class="row"><span>Camera 01</span><span class="chip">Online</span></div>
-      <div class="row"><span>Camera 02</span><span class="chip">Online</span></div>
-      <div class="row"><span>Camera 03</span><span class="chip warning">Warning</span></div>
-      <div class="row"><span>Camera 04</span><span class="chip">Online</span></div>
-    </div>
+    <div class="section-title">Add Camera</div>
+    <form id="camera-form" class="camera-form">
+      <div class="form-grid">
+        <div>
+          <label>Camera Name</label>
+          <input name="name" placeholder="Entrance" />
+        </div>
+        <div>
+          <label>Channel ID</label>
+          <input name="channel" placeholder="0" />
+        </div>
+        <div>
+          <label>Snapshot URL</label>
+          <input name="snapshot" placeholder="/cgi-bin/snapshot.cgi?ch=0" />
+        </div>
+        <div>
+          <label>Stream Info</label>
+          <input name="meta" placeholder="1920x1080 @ 30fps" />
+        </div>
+      </div>
+      <div class="camera-actions">
+        <button type="button" class="btn secondary" onclick="resetCameras()">Reset</button>
+        <button type="submit" class="btn">Add Camera</button>
+      </div>
+    </form>
   </div>
   <div class="card">
     <div class="section-title">Quick Actions</div>
