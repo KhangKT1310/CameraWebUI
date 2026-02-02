@@ -1,0 +1,121 @@
+<h1>Video & Audio Settings</h1>
+<p class="subtitle">Configure streaming attributes through CGI or REST API</p>
+
+<div class="card">
+  <div class="section-title">Video Stream</div>
+  <form id="video-form">
+    <div class="form-grid">
+      <div>
+        <label>Codec</label>
+        <select name="codec">
+          <option>H.264</option>
+          <option>H.265</option>
+        </select>
+      </div>
+      <div>
+        <label>Resolution</label>
+        <select name="resolution">
+          <option>1920x1080</option>
+          <option>1280x720</option>
+          <option>640x360</option>
+        </select>
+      </div>
+      <div>
+        <label>Frame Rate (fps)</label>
+        <input name="fps" value="30" />
+      </div>
+      <div>
+        <label>Bitrate (kbps)</label>
+        <input name="bitrate" value="2048" />
+      </div>
+      <div>
+        <label>GOP (keyframe interval)</label>
+        <input name="gop" value="60" />
+      </div>
+      <div>
+        <label>Profile</label>
+        <select name="profile">
+          <option>Baseline</option>
+          <option>Main</option>
+          <option>High</option>
+        </select>
+      </div>
+      <div>
+        <label>Rotate</label>
+        <select name="rotate">
+          <option>0°</option>
+          <option>90°</option>
+          <option>180°</option>
+          <option>270°</option>
+        </select>
+      </div>
+      <div>
+        <label>Mirror</label>
+        <select name="mirror">
+          <option>Off</option>
+          <option>Horizontal</option>
+          <option>Vertical</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="button" class="btn secondary" onclick="loadVideoConfig()">Reload</button>
+      <button type="submit" class="btn">Apply Video</button>
+    </div>
+  </form>
+</div>
+
+<br>
+
+<div class="card">
+  <div class="section-title">Audio Stream</div>
+  <form id="audio-form">
+    <div class="form-grid">
+      <div>
+        <label>Codec</label>
+        <select name="audio_codec">
+          <option>AAC</option>
+          <option>G.711</option>
+          <option>Opus</option>
+        </select>
+      </div>
+      <div>
+        <label>Sample Rate</label>
+        <select name="sample_rate">
+          <option>8 kHz</option>
+          <option>16 kHz</option>
+          <option>44.1 kHz</option>
+          <option>48 kHz</option>
+        </select>
+      </div>
+      <div>
+        <label>Audio Bitrate (kbps)</label>
+        <input name="audio_bitrate" value="128" />
+      </div>
+      <div>
+        <label>Mic Gain</label>
+        <input name="mic_gain" value="75" />
+      </div>
+      <div>
+        <label>Noise Reduction</label>
+        <select name="noise_reduction">
+          <option>Off</option>
+          <option>Low</option>
+          <option>Medium</option>
+          <option>High</option>
+        </select>
+      </div>
+      <div>
+        <label>Audio Channel</label>
+        <select name="audio_channel">
+          <option>Mono</option>
+          <option>Stereo</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="button" class="btn secondary" onclick="loadAudioConfig()">Reload</button>
+      <button type="submit" class="btn">Apply Audio</button>
+    </div>
+  </form>
+</div>

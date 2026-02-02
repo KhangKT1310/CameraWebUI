@@ -1,0 +1,48 @@
+<h1>System</h1>
+<p class="subtitle">Device information and maintenance</p>
+
+<div class="grid cols-2">
+  <div class="card">
+    <div class="section-title">Device Info</div>
+    <div class="list">
+      <div class="row"><span>Model</span><span id="sys-model">--</span></div>
+      <div class="row"><span>Serial</span><span id="sys-serial">--</span></div>
+      <div class="row"><span>Firmware</span><span id="sys-firmware">--</span></div>
+      <div class="row"><span>Build Date</span><span id="sys-build">--</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="section-title">Time & NTP</div>
+    <form id="time-form">
+      <div class="form-grid">
+        <div>
+          <label>Timezone</label>
+          <select name="timezone">
+            <option>UTC</option>
+            <option>Asia/Ho_Chi_Minh</option>
+            <option>America/Los_Angeles</option>
+            <option>Europe/Berlin</option>
+          </select>
+        </div>
+        <div>
+          <label>NTP Server</label>
+          <input name="ntp" value="pool.ntp.org" />
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn">Apply Time</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<br>
+
+<div class="card">
+  <div class="section-title">Maintenance</div>
+  <div class="list">
+    <div class="row"><span>Reboot Camera</span><button class="btn danger" onclick="reboot()">Reboot</button></div>
+    <div class="row"><span>Export Config</span><button class="btn secondary" onclick="exportConfig()">Download</button></div>
+    <div class="row"><span>Factory Reset</span><button class="btn danger" onclick="factoryReset()">Reset</button></div>
+  </div>
+</div>

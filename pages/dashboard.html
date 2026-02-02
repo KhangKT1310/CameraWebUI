@@ -1,0 +1,106 @@
+<h1>Camera Dashboard</h1>
+<p class="subtitle">Monitoring overview and quick actions</p>
+
+<div class="grid cols-4">
+  <div class="card kpi">
+    <div class="label">Status</div>
+    <div class="value" id="status-health">Online</div>
+    <span class="chip" id="status-mode">Normal</span>
+  </div>
+  <div class="card kpi">
+    <div class="label">Uptime</div>
+    <div class="value" id="status-uptime">--</div>
+    <span class="chip" id="status-firmware">Firmware --</span>
+  </div>
+  <div class="card kpi">
+    <div class="label">Storage</div>
+    <div class="value" id="status-storage">--</div>
+    <span class="chip warning" id="status-storage-state">Checking</span>
+  </div>
+  <div class="card kpi">
+    <div class="label">Device Temp</div>
+    <div class="value" id="status-temp">--</div>
+    <span class="chip" id="status-voltage">Voltage --</span>
+  </div>
+</div>
+
+<br>
+
+<div class="section-title">Live Thumbnails</div>
+<div class="grid cols-4" id="camera-grid">
+  <div class="card cam" data-ch="0">
+    <div class="cam-thumb">
+      <img src="/cgi-bin/snapshot.cgi?ch=0" alt="Camera 01" />
+      <span class="badge live">LIVE</span>
+    </div>
+    <div class="cam-title">Camera 01 – Entrance</div>
+    <div class="cam-meta">Stream: 1920x1080 @ 30fps</div>
+  </div>
+  <div class="card cam" data-ch="1">
+    <div class="cam-thumb">
+      <img src="/cgi-bin/snapshot.cgi?ch=1" alt="Camera 02" />
+      <span class="badge live">LIVE</span>
+    </div>
+    <div class="cam-title">Camera 02 – Parking</div>
+    <div class="cam-meta">Stream: 1920x1080 @ 25fps</div>
+  </div>
+  <div class="card cam" data-ch="2">
+    <div class="cam-thumb">
+      <img src="/cgi-bin/snapshot.cgi?ch=2" alt="Camera 03" />
+      <span class="badge live">LIVE</span>
+    </div>
+    <div class="cam-title">Camera 03 – Lobby</div>
+    <div class="cam-meta">Stream: 1280x720 @ 30fps</div>
+  </div>
+  <div class="card cam" data-ch="3">
+    <div class="cam-thumb">
+      <img src="/cgi-bin/snapshot.cgi?ch=3" alt="Camera 04" />
+      <span class="badge live">LIVE</span>
+    </div>
+    <div class="cam-title">Camera 04 – Warehouse</div>
+    <div class="cam-meta">Stream: 1920x1080 @ 20fps</div>
+  </div>
+</div>
+
+<br>
+
+<div class="grid cols-2">
+  <div class="card">
+    <div class="section-title">Camera Status</div>
+    <div class="list" id="camera-status-list">
+      <div class="row"><span>Camera 01</span><span class="chip">Online</span></div>
+      <div class="row"><span>Camera 02</span><span class="chip">Online</span></div>
+      <div class="row"><span>Camera 03</span><span class="chip warning">Warning</span></div>
+      <div class="row"><span>Camera 04</span><span class="chip">Online</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="section-title">Quick Actions</div>
+    <div class="list">
+      <div class="row"><span>Toggle IR LEDs</span><button class="btn secondary" onclick="toggleIr()">Toggle</button></div>
+      <div class="row"><span>Start Manual Recording</span><button class="btn secondary" onclick="startRecording()">Start</button></div>
+      <div class="row"><span>Capture Snapshot</span><button class="btn secondary" onclick="captureSnapshot()">Capture</button></div>
+    </div>
+  </div>
+</div>
+
+<br>
+
+<div class="grid cols-2">
+  <div class="card">
+    <div class="section-title">Recent Events</div>
+    <div class="list" id="event-list">
+      <div class="row"><span>Motion detected at Entrance</span><span class="chip">2 min ago</span></div>
+      <div class="row"><span>Storage 78% used</span><span class="chip warning">10 min ago</span></div>
+      <div class="row"><span>Firmware check completed</span><span class="chip">1 hr ago</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="section-title">System Health</div>
+    <div class="list">
+      <div class="row"><span>CPU Load</span><span id="health-cpu">--</span></div>
+      <div class="row"><span>Memory Usage</span><span id="health-mem">--</span></div>
+      <div class="row"><span>Network RX/TX</span><span id="health-net">--</span></div>
+    </div>
+  </div>
+</div>

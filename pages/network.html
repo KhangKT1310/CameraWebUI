@@ -1,0 +1,51 @@
+<h1>Network Settings</h1>
+<p class="subtitle">Configure static IP or DHCP for this camera</p>
+
+<div class="card">
+  <form id="network-form">
+    <div class="section-title">IP Configuration</div>
+    <div class="form-grid">
+      <div>
+        <label>Use DHCP</label><br>
+        <label class="switch">
+          <input type="checkbox" name="dhcp" />
+          <span class="track"><span class="thumb"></span></span>
+          <span>Enable</span>
+        </label>
+      </div>
+      <div>
+        <label>MTU</label>
+        <input name="mtu" value="1500" />
+      </div>
+      <div>
+        <label>Static IP Address</label>
+        <input name="ip" value="192.168.1.100" />
+      </div>
+      <div>
+        <label>Subnet Mask</label>
+        <input name="mask" value="255.255.255.0" />
+      </div>
+      <div>
+        <label>Gateway</label>
+        <input name="gateway" value="192.168.1.1" />
+      </div>
+      <div>
+        <label>DNS 1</label>
+        <input name="dns1" value="8.8.8.8" />
+      </div>
+      <div>
+        <label>DNS 2</label>
+        <input name="dns2" value="1.1.1.1" />
+      </div>
+      <div>
+        <label>HTTP Port</label>
+        <input name="http_port" value="80" />
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn secondary" onclick="loadNetworkConfig()">Reload</button>
+      <button type="submit" class="btn">Apply Network</button>
+    </div>
+  </form>
+</div>

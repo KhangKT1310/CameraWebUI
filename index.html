@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Camera Console</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div class="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">
+        <span class="dot"></span>
+        <span>Camera</span>
+      </div>
+    </div>
+
+    <div class="profile">
+      <div class="name">admin</div>
+      <div class="role">Administrator</div>
+    </div>
+
+    <nav class="nav">
+      <a class="active" data-page="dashboard">Dashboard</a>
+      <a data-page="network">Network</a>
+      <a data-page="video">Video & Audio</a>
+      <a data-page="system">System</a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <header class="topbar">
+      <div class="left">
+        <input class="search" placeholder="Search settings or camera..." />
+        <span class="status-pill" id="connection-pill">
+          <span class="dot"></span>
+          Connected
+        </span>
+      </div>
+      <div class="right">
+        <button class="btn secondary" onclick="refreshThumbs()">Refresh Thumbnails</button>
+        <button class="btn danger" onclick="reboot()">Reboot</button>
+      </div>
+    </header>
+
+    <main class="content" id="page"></main>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
