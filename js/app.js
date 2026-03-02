@@ -300,45 +300,6 @@ function saveCameras(cameras) {
 }
 
 function renderCameras() {
-
-function initHlsPlayer() {
-  const video = document.getElementById("hls-player");
-  const status = document.getElementById("hls-status");
-  const urlLabel = document.getElementById("hls-url");
-  if (!video) return;
-
-  if (urlLabel) urlLabel.textContent = HLS_TEST_URL;
-  if (status) status.textContent = "Loading";
-
-  if (hlsInstance) {
-    hlsInstance.destroy();
-    hlsInstance = null;
-  }
-
-  if (window.Hls && window.Hls.isSupported()) {
-    hlsInstance = new window.Hls({
-      lowLatencyMode: false
-    });
-    hlsInstance.loadSource(HLS_TEST_URL);
-    hlsInstance.attachMedia(video);
-    hlsInstance.on(window.Hls.Events.MANIFEST_PARSED, () => {
-      video.play().catch(() => {});
-      if (status) status.textContent = "Playing";
-    });
-    hlsInstance.on(window.Hls.Events.ERROR, () => {
-      if (status) status.textContent = "Error";
-    });
-  } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-    video.src = HLS_TEST_URL;
-    video.addEventListener("loadedmetadata", () => {
-      video.play().catch(() => {});
-      if (status) status.textContent = "Playing";
-    }, { once: true });
-  } else {
-    if (status) status.textContent = "Unsupported";
-  }
-}
-
   const grid = document.getElementById("camera-grid");
   if (!grid) return;
   const cameras = getCameras();
@@ -377,6 +338,44 @@ function initHlsPlayer() {
     card.appendChild(meta);
     grid.appendChild(card);
   });
+}
+
+function initHlsPlayer() {
+  const video = document.getElementById("hls-player");
+  const status = document.getElementById("hls-status");
+  const urlLabel = document.getElementById("hls-url");
+  if (!video) return;
+
+  if (urlLabel) urlLabel.textContent = HLS_TEST_URL;
+  if (status) status.textContent = "Loading";
+
+  if (hlsInstance) {
+    hlsInstance.destroy();
+    hlsInstance = null;
+  }
+
+  if (window.Hls && window.Hls.isSupported()) {
+    hlsInstance = new window.Hls({
+      lowLatencyMode: false
+    });
+    hlsInstance.loadSource(HLS_TEST_URL);
+    hlsInstance.attachMedia(video);
+    hlsInstance.on(window.Hls.Events.MANIFEST_PARSED, () => {
+      video.play().catch(() => { });
+      if (status) status.textContent = "Playing";
+    });
+    hlsInstance.on(window.Hls.Events.ERROR, () => {
+      if (status) status.textContent = "Error";
+    });
+  } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+    video.src = HLS_TEST_URL;
+    video.addEventListener("loadedmetadata", () => {
+      video.play().catch(() => { });
+      if (status) status.textContent = "Playing";
+    }, { once: true });
+  } else {
+    if (status) status.textContent = "Unsupported";
+  }
 }
 
 function cacheBust(url) {
