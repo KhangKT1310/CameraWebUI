@@ -525,3 +525,25 @@ select:focus {
   gap: 10px;
   justify-content: flex-end;
 }
+
+
+.video-frame {
+  background: #0f172a;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.video-frame video {
+  width: 100%;
+  height: 320px;
+  display: block;
+  background: #0f172a;
+}
+
+.video-meta {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--muted);
+  word-break: break-all;
+}

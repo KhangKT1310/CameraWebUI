@@ -7,6 +7,8 @@ const USE_MOCK = true;
 
 const AUTH_KEY = "camera-auth";
 const CAMERA_KEY = "camera-list";
+const HLS_TEST_URL = "https://sample.vodobox.net/skate_phantom_flex_4k/skate_phantom_flex_4k.m3u8";
+let hlsInstance = null;
 
 const ENDPOINTS = {
   reboot: "/cgi-bin/system.cgi?action=reboot",
@@ -149,6 +151,7 @@ function initPage(name) {
     loadDashboardStatus();
     bindForm("camera-form", addCamera);
     renderCameras();
+    initHlsPlayer();
   }
   if (name === "video") {
     bindForm("video-form", saveVideo);
@@ -297,6 +300,45 @@ function saveCameras(cameras) {
 }
 
 function renderCameras() {
+
+function initHlsPlayer() {
+  const video = document.getElementById("hls-player");
+  const status = document.getElementById("hls-status");
+  const urlLabel = document.getElementById("hls-url");
+  if (!video) return;
+
+  if (urlLabel) urlLabel.textContent = HLS_TEST_URL;
+  if (status) status.textContent = "Loading";
+
+  if (hlsInstance) {
+    hlsInstance.destroy();
+    hlsInstance = null;
+  }
+
+  if (window.Hls && window.Hls.isSupported()) {
+    hlsInstance = new window.Hls({
+      lowLatencyMode: false
+    });
+    hlsInstance.loadSource(HLS_TEST_URL);
+    hlsInstance.attachMedia(video);
+    hlsInstance.on(window.Hls.Events.MANIFEST_PARSED, () => {
+      video.play().catch(() => {});
+      if (status) status.textContent = "Playing";
+    });
+    hlsInstance.on(window.Hls.Events.ERROR, () => {
+      if (status) status.textContent = "Error";
+    });
+  } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+    video.src = HLS_TEST_URL;
+    video.addEventListener("loadedmetadata", () => {
+      video.play().catch(() => {});
+      if (status) status.textContent = "Playing";
+    }, { once: true });
+  } else {
+    if (status) status.textContent = "Unsupported";
+  }
+}
+
   const grid = document.getElementById("camera-grid");
   if (!grid) return;
   const cameras = getCameras();
@@ -457,6 +499,9 @@ function initAuth() {
     });
   }
 
+  if (USE_MOCK) {
+    localStorage.setItem(AUTH_KEY, "mock-token");
+  }
   const authed = Boolean(localStorage.getItem(AUTH_KEY));
   setAuthState(authed);
   if (authed) {
