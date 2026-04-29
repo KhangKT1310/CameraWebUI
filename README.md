@@ -50,6 +50,23 @@ After deployment, open the Vercel URL to view the UI.
 
 > Note: Vercel only hosts the static frontend. Camera CGI/REST will not run on Vercel. Use a backend/proxy or call the camera IP directly (CORS permitting) if you need real control.
 
+### WebRTC runtime variables
+The dashboard reads WebRTC settings from `GET /api/runtime-config` when deployed on Vercel.
+
+Set these Vercel environment variables if you want to override the defaults:
+
+```bash
+WEBRTC_SERVER_HOST=127.0.0.1
+WEBRTC_WS_PORT=23000
+WEBRTC_STUN_URL=stun:127.0.0.1:23001
+WEBRTC_TURN_URL=turn:127.0.0.1:23001?transport=udp
+WEBRTC_TURN_USERNAME=myuser
+WEBRTC_TURN_CREDENTIAL=mypassword
+WEBRTC_ICE_TRANSPORT_POLICY=relay
+```
+
+If `/api/runtime-config` is unavailable, the frontend falls back to the current defaults.
+
 ## Ideas to Extend
 - Full CRUD for cameras (edit/delete).
 - Real auth (token/cookie).
