@@ -56,10 +56,10 @@ The dashboard reads WebRTC settings from `GET /api/runtime-config` when deployed
 Set these Vercel environment variables if you want to override the defaults:
 
 ```bash
-WEBRTC_SERVER_HOST=127.0.0.1
+WEBRTC_SERVER_HOST=webrtc.vigorlabs.org
 WEBRTC_WS_PORT=23000
-WEBRTC_STUN_URL=stun:127.0.0.1:23001
-WEBRTC_TURN_URL=turn:127.0.0.1:23001?transport=udp
+WEBRTC_STUN_URL=stun:webrtc.vigorlabs.org:23001
+WEBRTC_TURN_URL=turn:webrtc.vigorlabs.org:23001?transport=udp
 WEBRTC_TURN_USERNAME=myuser
 WEBRTC_TURN_CREDENTIAL=mypassword
 WEBRTC_ICE_TRANSPORT_POLICY=relay

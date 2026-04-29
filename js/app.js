@@ -11,13 +11,13 @@ const DASHBOARD_CAMERA_ID = "camera-001";
 const DASHBOARD_STREAM_COUNT = 4;
 const WEBRTC_CLIENT_ID_LENGTH = 10;
 const DEFAULT_WEBRTC_RUNTIME_CONFIG = {
-  host: "127.0.0.1",
+  host: "webrtc.vigorlabs.org",
   wsPort: 23000,
-  stunUrl: "stun:127.0.0.1:23001",
-  turnUrl: "turn:127.0.0.1:23001?transport=udp",
+  stunUrl: "stun:webrtc.vigorlabs.org:23001",
+  turnUrl: "turn:webrtc.vigorlabs.org:23001?transport=udp",
   username: "myuser",
   credential: "mypassword",
-  iceTransportPolicy: "relay",
+  iceTransportPolicy: "relay"
 };
 let activePage = null;
 let dashboardSessions = [];
@@ -36,7 +36,7 @@ const ENDPOINTS = {
   record: "/cgi-bin/record.cgi?action=start",
   snapshot: "/cgi-bin/snapshot.cgi",
   login: "/cgi-bin/login.cgi",
-  logout: "/cgi-bin/logout.cgi",
+  logout: "/cgi-bin/logout.cgi"
 };
 
 const MOCK = {
@@ -48,18 +48,18 @@ const MOCK = {
     storage: "78% used",
     storageState: "Healthy",
     temp: "48°C",
-    voltage: "12.1V",
+    voltage: "12.1V"
   },
   health: {
     cpu: "38%",
     mem: "62%",
-    net: "4.2 Mbps / 1.1 Mbps",
+    net: "4.2 Mbps / 1.1 Mbps"
   },
   system: {
     model: "VX-5000",
     serial: "VGT-2026-0312",
     firmware: "v2.1.8",
-    build: "2026-01-12",
+    build: "2026-01-12"
   },
   network: {
     dhcp: false,
@@ -69,7 +69,7 @@ const MOCK = {
     gateway: "192.168.1.1",
     dns1: "8.8.8.8",
     dns2: "1.1.1.1",
-    http_port: "80",
+    http_port: "80"
   },
   video: {
     codec: "H.264",
@@ -79,7 +79,7 @@ const MOCK = {
     gop: "60",
     profile: "Main",
     rotate: "0°",
-    mirror: "Off",
+    mirror: "Off"
   },
   audio: {
     audio_codec: "AAC",
@@ -87,34 +87,34 @@ const MOCK = {
     audio_bitrate: "128",
     mic_gain: "75",
     noise_reduction: "Medium",
-    audio_channel: "Mono",
+    audio_channel: "Mono"
   },
   cameras: [
     {
       name: "Camera 01 – Entrance",
       channel: "0",
       snapshot: "/cgi-bin/snapshot.cgi?ch=0",
-      meta: "1920x1080 @ 30fps",
+      meta: "1920x1080 @ 30fps"
     },
     {
       name: "Camera 02 – Parking",
       channel: "1",
       snapshot: "/cgi-bin/snapshot.cgi?ch=1",
-      meta: "1920x1080 @ 25fps",
+      meta: "1920x1080 @ 25fps"
     },
     {
       name: "Camera 03 – Lobby",
       channel: "2",
       snapshot: "/cgi-bin/snapshot.cgi?ch=2",
-      meta: "1280x720 @ 30fps",
+      meta: "1280x720 @ 30fps"
     },
     {
       name: "Camera 04 – Warehouse",
       channel: "3",
       snapshot: "/cgi-bin/snapshot.cgi?ch=3",
-      meta: "1920x1080 @ 20fps",
-    },
-  ],
+      meta: "1920x1080 @ 20fps"
+    }
+  ]
 };
 
 function showToast(message) {
@@ -131,7 +131,7 @@ function apiPost(url, payload) {
   return fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payload)
   });
 }
 
@@ -139,14 +139,12 @@ function apiGet(url) {
   if (USE_MOCK) {
     return Promise.resolve({ ok: true, data: {} });
   }
-  return fetch(url).then((res) => res.json());
+  return fetch(url).then(res => res.json());
 }
 
-document.querySelectorAll(".nav a").forEach((link) => {
+document.querySelectorAll(".nav a").forEach(link => {
   link.onclick = () => {
-    document
-      .querySelectorAll(".nav a")
-      .forEach((a) => a.classList.remove("active"));
+    document.querySelectorAll(".nav a").forEach(a => a.classList.remove("active"));
     link.classList.add("active");
     loadPage(link.dataset.page);
   };
@@ -155,8 +153,8 @@ document.querySelectorAll(".nav a").forEach((link) => {
 function loadPage(name) {
   teardownPage(activePage);
   fetch(`pages/${name}.html`)
-    .then((res) => res.text())
-    .then((html) => {
+    .then(res => res.text())
+    .then(html => {
       page.innerHTML = html;
       activePage = name;
       initPage(name);
@@ -195,7 +193,7 @@ function teardownPage(name) {
 function bindForm(id, handler) {
   const form = document.getElementById(id);
   if (!form) return;
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", event => {
     event.preventDefault();
     handler(new FormData(form), form);
   });
@@ -203,7 +201,7 @@ function bindForm(id, handler) {
 
 function setFormValues(form, data) {
   if (!form || !data) return;
-  Object.keys(data).forEach((key) => {
+  Object.keys(data).forEach(key => {
     const field = form.querySelector(`[name="${key}"]`);
     if (!field) return;
     if (field.type === "checkbox") {
@@ -245,7 +243,7 @@ function loadVideoConfig() {
     setFormValues(form, MOCK.video);
     showToast("Loaded video configuration");
   } else {
-    apiGet(ENDPOINTS.video).then((data) => setFormValues(form, data));
+    apiGet(ENDPOINTS.video).then(data => setFormValues(form, data));
   }
 }
 
@@ -255,7 +253,7 @@ function loadAudioConfig() {
     setFormValues(form, MOCK.audio);
     showToast("Loaded audio configuration");
   } else {
-    apiGet(ENDPOINTS.audio).then((data) => setFormValues(form, data));
+    apiGet(ENDPOINTS.audio).then(data => setFormValues(form, data));
   }
 }
 
@@ -265,7 +263,7 @@ function loadNetworkConfig() {
     setFormValues(form, MOCK.network);
     showToast("Loaded network configuration");
   } else {
-    apiGet(ENDPOINTS.network).then((data) => setFormValues(form, data));
+    apiGet(ENDPOINTS.network).then(data => setFormValues(form, data));
   }
 }
 
@@ -276,7 +274,7 @@ function loadSystemInfo() {
     setText("sys-firmware", MOCK.system.firmware);
     setText("sys-build", MOCK.system.build);
   } else {
-    apiGet(ENDPOINTS.status).then((data) => {
+    apiGet(ENDPOINTS.status).then(data => {
       setText("sys-model", data.model);
       setText("sys-serial", data.serial);
       setText("sys-firmware", data.firmware);
@@ -287,31 +285,23 @@ function loadSystemInfo() {
 
 function saveVideo(formData) {
   const payload = Object.fromEntries(formData.entries());
-  apiPost(ENDPOINTS.video, payload).then(() =>
-    showToast("Video settings applied")
-  );
+  apiPost(ENDPOINTS.video, payload).then(() => showToast("Video settings applied"));
 }
 
 function saveAudio(formData) {
   const payload = Object.fromEntries(formData.entries());
-  apiPost(ENDPOINTS.audio, payload).then(() =>
-    showToast("Audio settings applied")
-  );
+  apiPost(ENDPOINTS.audio, payload).then(() => showToast("Audio settings applied"));
 }
 
 function saveNetwork(formData) {
   const payload = Object.fromEntries(formData.entries());
   payload.dhcp = payload.dhcp === "on";
-  apiPost(ENDPOINTS.network, payload).then(() =>
-    showToast("Network settings applied")
-  );
+  apiPost(ENDPOINTS.network, payload).then(() => showToast("Network settings applied"));
 }
 
 function saveTime(formData) {
   const payload = Object.fromEntries(formData.entries());
-  apiPost(ENDPOINTS.time, payload).then(() =>
-    showToast("Time settings applied")
-  );
+  apiPost(ENDPOINTS.time, payload).then(() => showToast("Time settings applied"));
 }
 
 function getCameras() {
@@ -336,7 +326,7 @@ function renderCameras() {
   const cameras = getCameras();
   grid.innerHTML = "";
 
-  cameras.forEach((camera) => {
+  cameras.forEach(camera => {
     const card = document.createElement("div");
     card.className = "card cam";
     card.dataset.ch = camera.channel || "";
@@ -387,7 +377,7 @@ async function loadRuntimeConfig() {
 
     webRtcRuntimeConfig = {
       ...DEFAULT_WEBRTC_RUNTIME_CONFIG,
-      ...runtimeConfig.webrtc,
+      ...runtimeConfig.webrtc
     };
   } catch (error) {
     console.warn("Runtime config unavailable, using defaults", error);
@@ -395,15 +385,12 @@ async function loadRuntimeConfig() {
 }
 
 function randomId(length) {
-  const chars =
-    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-  return Array.from({ length }, () =>
-    chars.charAt(Math.floor(Math.random() * chars.length))
-  ).join("");
+  const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  return Array.from({ length }, () => chars.charAt(Math.floor(Math.random() * chars.length))).join("");
 }
 
 function waitForIceGatheringComplete(pc) {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     if (!pc || pc.iceGatheringState === "complete") {
       resolve();
       return;
@@ -427,9 +414,9 @@ function getWebRtcPeerConfig() {
       {
         urls: runtimeConfig.turnUrl,
         username: runtimeConfig.username,
-        credential: runtimeConfig.credential,
-      },
-    ],
+        credential: runtimeConfig.credential
+      }
+    ]
   };
   if (runtimeConfig.iceTransportPolicy) {
     config.iceTransportPolicy = runtimeConfig.iceTransportPolicy;
@@ -461,15 +448,9 @@ function updateDashboardSummary() {
   const pill = document.getElementById("connection-pill");
   if (!summary || !pill) return;
 
-  const liveCount = dashboardSessions.filter(
-    (session) => session.connectionState === "live"
-  ).length;
-  const connectingCount = dashboardSessions.filter(
-    (session) => session.connectionState === "connecting"
-  ).length;
-  const errorCount = dashboardSessions.filter(
-    (session) => session.connectionState === "error"
-  ).length;
+  const liveCount = dashboardSessions.filter(session => session.connectionState === "live").length;
+  const connectingCount = dashboardSessions.filter(session => session.connectionState === "connecting").length;
+  const errorCount = dashboardSessions.filter(session => session.connectionState === "error").length;
 
   summary.textContent = `${liveCount}/${dashboardSessions.length} live`;
   if (liveCount === dashboardSessions.length && liveCount > 0) {
@@ -480,13 +461,7 @@ function updateDashboardSummary() {
     summary.className = "chip warning";
   }
 
-  pill.innerHTML = `<span class="dot"></span>${
-    liveCount > 0
-      ? `${liveCount} stream live`
-      : connectingCount > 0
-      ? "Connecting streams"
-      : "Disconnected"
-  }`;
+  pill.innerHTML = `<span class="dot"></span>${liveCount > 0 ? `${liveCount} stream live` : connectingCount > 0 ? "Connecting streams" : "Disconnected"}`;
 }
 
 function setDashboardSessionState(session, state, label, meta) {
@@ -517,37 +492,34 @@ function initDashboardLiveGrid() {
   destroyDashboardLiveGrid();
   liveGrid.innerHTML = "";
 
-  dashboardSessions = Array.from(
-    { length: DASHBOARD_STREAM_COUNT },
-    (_, offset) => {
-      const index = offset + 1;
-      const card = createDashboardLiveCard(index);
-      liveGrid.appendChild(card);
-      const videoEl = card.querySelector("video");
-      const placeholderEl = card.querySelector(".live-placeholder");
-      const statusEl = card.querySelector(".live-status");
-      const metaEl = card.querySelector(".live-meta");
+  dashboardSessions = Array.from({ length: DASHBOARD_STREAM_COUNT }, (_, offset) => {
+    const index = offset + 1;
+    const card = createDashboardLiveCard(index);
+    liveGrid.appendChild(card);
+    const videoEl = card.querySelector("video");
+    const placeholderEl = card.querySelector(".live-placeholder");
+    const statusEl = card.querySelector(".live-status");
+    const metaEl = card.querySelector(".live-meta");
 
-      const session = {
-        index,
-        cameraId: DASHBOARD_CAMERA_ID,
-        clientId: randomId(WEBRTC_CLIENT_ID_LENGTH),
-        card,
-        videoEl,
-        placeholderEl,
-        statusEl,
-        metaEl,
-        socket: null,
-        pc: null,
-        reconnectTimer: null,
-        stopped: false,
-        connectionState: "idle",
-      };
+    const session = {
+      index,
+      cameraId: DASHBOARD_CAMERA_ID,
+      clientId: randomId(WEBRTC_CLIENT_ID_LENGTH),
+      card,
+      videoEl,
+      placeholderEl,
+      statusEl,
+      metaEl,
+      socket: null,
+      pc: null,
+      reconnectTimer: null,
+      stopped: false,
+      connectionState: "idle"
+    };
 
-      startDashboardStream(session);
-      return session;
-    }
-  );
+    startDashboardStream(session);
+    return session;
+  });
 
   updateDashboardSummary();
 }
@@ -560,12 +532,7 @@ function startDashboardStream(session) {
 function connectDashboardSocket(session) {
   const runtimeConfig = webRtcRuntimeConfig;
   clearTimeout(session.reconnectTimer);
-  setDashboardSessionState(
-    session,
-    "connecting",
-    "Connecting",
-    `WS ${runtimeConfig.host}:${runtimeConfig.wsPort}`
-  );
+  setDashboardSessionState(session, "connecting", "Connecting", `WS ${runtimeConfig.host}:${runtimeConfig.wsPort}`);
 
   const wsUrl = `ws://${runtimeConfig.host}:${runtimeConfig.wsPort}/${session.clientId}`;
   const socket = new WebSocket(wsUrl);
@@ -573,21 +540,14 @@ function connectDashboardSocket(session) {
 
   socket.onopen = () => {
     if (session.stopped) return;
-    setDashboardSessionState(
-      session,
-      "connecting",
-      "Requesting stream",
-      session.cameraId
-    );
-    socket.send(
-      JSON.stringify({
-        id: session.cameraId,
-        type: "request",
-      })
-    );
+    setDashboardSessionState(session, "connecting", "Requesting stream", session.cameraId);
+    socket.send(JSON.stringify({
+      id: session.cameraId,
+      type: "request"
+    }));
   };
 
-  socket.onmessage = async (event) => {
+  socket.onmessage = async event => {
     if (session.stopped || typeof event.data !== "string") return;
     try {
       const message = JSON.parse(event.data);
@@ -595,34 +555,19 @@ function connectDashboardSocket(session) {
         await handleDashboardOffer(session, message);
       }
     } catch (error) {
-      setDashboardSessionState(
-        session,
-        "error",
-        "Invalid signal",
-        "Cannot parse signaling payload"
-      );
+      setDashboardSessionState(session, "error", "Invalid signal", "Cannot parse signaling payload");
       console.error("WebRTC signaling parse failed", error);
     }
   };
 
   socket.onerror = () => {
-    setDashboardSessionState(
-      session,
-      "error",
-      "Socket error",
-      `WS ${runtimeConfig.host}:${runtimeConfig.wsPort}`
-    );
+    setDashboardSessionState(session, "error", "Socket error", `WS ${runtimeConfig.host}:${runtimeConfig.wsPort}`);
   };
 
   socket.onclose = () => {
     closeDashboardPeer(session);
     if (!session.stopped && activePage === "dashboard") {
-      setDashboardSessionState(
-        session,
-        "connecting",
-        "Reconnecting",
-        "Socket closed, retrying"
-      );
+      setDashboardSessionState(session, "connecting", "Reconnecting", "Socket closed, retrying");
       session.reconnectTimer = setTimeout(() => {
         connectDashboardSocket(session);
       }, 1500);
@@ -638,36 +583,17 @@ function createDashboardPeerConnection(session) {
     const state = pc.iceConnectionState;
     if (state === "connected" || state === "completed") {
       setDashboardSessionState(session, "live", "Live", `ICE ${state}`);
-    } else if (
-      state === "failed" ||
-      state === "disconnected" ||
-      state === "closed"
-    ) {
-      setDashboardSessionState(
-        session,
-        "error",
-        "Connection lost",
-        `ICE ${state}`
-      );
+    } else if (state === "failed" || state === "disconnected" || state === "closed") {
+      setDashboardSessionState(session, "error", "Connection lost", `ICE ${state}`);
     } else {
-      setDashboardSessionState(
-        session,
-        "connecting",
-        "Negotiating",
-        `ICE ${state}`
-      );
+      setDashboardSessionState(session, "connecting", "Negotiating", `ICE ${state}`);
     }
   });
 
-  pc.ontrack = (event) => {
+  pc.ontrack = event => {
     session.videoEl.srcObject = event.streams[0];
     session.videoEl.play().catch(() => {});
-    setDashboardSessionState(
-      session,
-      "live",
-      "Live",
-      `${session.cameraId} · Stream ${session.index}`
-    );
+    setDashboardSessionState(session, "live", "Live", `${session.cameraId} · Stream ${session.index}`);
   };
 
   return pc;
@@ -686,21 +612,19 @@ async function handleDashboardOffer(session, offer) {
     return;
   }
 
-  session.socket.send(
-    JSON.stringify({
-      id: session.cameraId,
-      type: pc.localDescription.type,
-      sdp: pc.localDescription.sdp,
-    })
-  );
+  session.socket.send(JSON.stringify({
+    id: session.cameraId,
+    type: pc.localDescription.type,
+    sdp: pc.localDescription.sdp
+  }));
 }
 
 function closeDashboardPeer(session) {
   if (!session.pc) return;
-  session.pc.getTransceivers().forEach((transceiver) => {
+  session.pc.getTransceivers().forEach(transceiver => {
     if (transceiver.stop) transceiver.stop();
   });
-  session.pc.getSenders().forEach((sender) => {
+  session.pc.getSenders().forEach(sender => {
     if (sender.track) sender.track.stop();
   });
   session.pc.close();
@@ -757,7 +681,7 @@ function refreshThumbs() {
     showToast("Live streams reconnecting");
     return;
   }
-  document.querySelectorAll(".cam-thumb img").forEach((img) => {
+  document.querySelectorAll(".cam-thumb img").forEach(img => {
     const base = img.dataset.src || img.src;
     img.src = cacheBust(base);
   });
@@ -844,7 +768,7 @@ function logout() {
 function initAuth() {
   const form = document.getElementById("login-form");
   if (form) {
-    form.addEventListener("submit", (event) => {
+    form.addEventListener("submit", event => {
       event.preventDefault();
       login(new FormData(form));
     });
